@@ -1,86 +1,32 @@
 # AGENTS.md
 
-Instructions for AI agents working in this repository.
+在本仓库工作的 AI 代理须知。
 
-## Before Making Changes
+## 修改前
 
-1. Read this file and the repository README.
-2. Inspect the relevant category and tool directories before creating or changing a tool.
-3. Check whether an existing tool already solves the same or a closely related problem.
-4. Keep changes scoped to the requested tool unless the task explicitly requires repository-wide changes.
+1. 阅读本文件和仓库 README。
+2. 阅读 `standards/` 下适用的规范文件。
+3. 创建或修改工具前，先查看相关分类和工具目录。
+4. 检查是否已有工具解决了相同或高度相近的问题。
+5. 除非任务明确需要仓库范围的改动，否则将变更限制在所请求的工具内。
 
-## Repository Structure
+## 工具规范
 
-- All tool source code belongs under `src/`.
-- Organize tools as `src/<category>/<tool>/`.
-- Category directories are created on demand; do not create speculative categories.
-- Use `kebab-case` for category and tool directory names.
-- Keep repository-level documentation and configuration at the repository root.
-- Do not add sample tools or empty category structures unless requested.
+工具的设计、结构、技术选型、入口、参数配置、安全和文档要求统一由规范文件定义，本文件不再重复，以规范文件为准：
 
-## Tool Independence
+- [standards/tool-design.md](standards/tool-design.md)：工具设计权威规范。
+- 后续新增规范按 `standards/<topic>.md`（kebab-case）一个主题一个文件存放。
 
-Every tool must be independently developable, executable, copyable, and migratable.
+## Git 工作流
 
-- Keep each tool's implementation, internal modules, dependencies, and required configuration inside its own directory.
-- Do not import source code from another tool directory.
-- Do not introduce repository-root runtime modules, shared runtime layers, registries, or cross-tool utility packages.
-- Prefer reasonable local duplication over cross-tool source dependencies.
-- A tool may split its own implementation into modules as its complexity requires.
+- 未明确指定分支时使用主分支。
+- 未经要求不重写历史、不强制推送。
+- 提交保持聚焦，使用描述性的提交信息。
+- 不提交生成文件、密钥、凭据或本地环境文件。
 
-## Implementation
+## 变更纪律
 
-1. Prefer TypeScript with Node.js by default.
-2. Choose Python, Rust, Shell, or PowerShell when they provide a clear practical advantage.
-3. Do not force a single language or execution model across tools.
-4. Choose the simplest structure that fits the tool's actual complexity.
-5. Use standard-library functionality when it is sufficient.
-6. Keep third-party dependencies minimal and declare them within the tool directory.
-7. Follow the existing tool's language, conventions, and style when modifying it.
-8. Do not introduce frameworks, build systems, or abstractions without a concrete need.
-
-## Entrypoints and Commands
-
-- Give each tool a clear execution entrypoint and document how to use it.
-- A tool may expose multiple related commands.
-- Keep command dispatch in the entrypoint and command-specific logic in separate modules when that improves clarity.
-- Simple tools do not need a command framework or dispatcher.
-- Do not combine unrelated functionality into one tool.
-
-## Safety
-
-For destructive or potentially disruptive operations, including file deletion, bulk modification, system changes, and Git operations:
-
-- Provide a preview or `--dry-run` mode where practical.
-- Clearly identify the scope and expected effects.
-- Require confirmation when appropriate.
-- Avoid irreversible actions without explicit authorization.
-- Consider backup or recovery options when modifying important data.
-
-## Documentation
-
-Document each independently useful tool in its own `README.md`. Include, as applicable:
-
-- Purpose and capabilities.
-- Environment requirements.
-- Dependency installation.
-- Execution instructions.
-- Parameters and options.
-- Usage examples.
-- Limitations and safety notes.
-
-A trivial single-file tool may use clear inline comments instead.
-
-## Git Workflow
-
-- Use the main branch when no branch is explicitly specified.
-- Do not rewrite history or force-push unless explicitly requested.
-- Keep commits focused and use descriptive commit messages.
-- Do not commit generated files, secrets, credentials, or local environment files.
-
-## Change Discipline
-
-- Avoid unrelated refactoring and formatting changes.
-- Do not add speculative infrastructure for possible future requirements.
-- Do not add shared modules merely to eliminate small amounts of duplication.
-- Preserve the repository's self-contained-tool philosophy in every design decision.
+- 避免无关的重构和格式调整。
+- 不为假想的未来需求添加投机性基础设施。
+- 不仅为消除少量重复而添加共享模块。
+- 在每一个设计决策中维护仓库工具自包含的理念。

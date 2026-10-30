@@ -22,6 +22,8 @@ toolbox/
 ├── AGENTS.md
 ├── README.md
 ├── .gitignore
+├── standards/              # 工具规范文件
+│   └── tool-design.md
 └── src/
     └── <category>/
         └── <tool>/
@@ -67,6 +69,8 @@ toolbox/
 5. 优先考虑开发效率、维护成本和实际使用体验。
 
 ## Tool Design Principles
+
+以下为各原则的概览说明；工具设计的权威规范见 [standards/tool-design.md](standards/tool-design.md)，两者冲突时以规范文件为准。
 
 ### 1. Self-contained
 
@@ -142,7 +146,13 @@ branch-manager/
 
 一个工具可以有多个相关执行入口，但不应将不相关的功能合并到一起。
 
-### 4. Dependency Management
+### 4. Parameters and Configuration
+
+接受参数的工具应同时支持**文件内默认值**（入口文件顶部可编辑的默认配置区）与**命令行参数**两种来源，命令行参数始终优先；不得在默认值中提交个人信息或凭据，必填值缺失时打印用法并以非零状态码退出。
+
+完整规则见 [standards/tool-design.md](standards/tool-design.md) 的「参数与配置」一节，`src/git/set-git-config/` 为参考实现。
+
+### 5. Dependency Management
 
 - 每个工具独立声明第三方依赖。
 - 不使用仓库根目录统一管理所有工具的运行时依赖。
@@ -152,7 +162,7 @@ branch-manager/
 - 工具应明确说明运行环境和依赖安装方式。
 - 允许调用操作系统原生命令和外部程序，但需要明确说明相关环境要求。
 
-### 5. Safety
+### 6. Safety
 
 涉及文件删除、批量修改、系统操作、Git 操作等可能产生破坏性影响的功能时：
 
@@ -162,7 +172,7 @@ branch-manager/
 - 避免未经确认执行不可逆操作。
 - 对重要数据的修改尽可能提供备份或恢复方案。
 
-### 6. Documentation
+### 7. Documentation
 
 每个具有独立使用价值的工具应提供 README，至少说明：
 
@@ -195,6 +205,7 @@ AI 在处理仓库任务时应遵循：
 11. 新增工具时使用 kebab-case 命名，并放入合适的分类目录。
 12. 不为了消除少量重复代码而引入跨工具共享模块。
 13. 所有工具源码统一放在 `src/` 下，仓库级文档和配置保留在根目录。
+14. 接受参数的工具应同时支持文件内默认值与命令行参数，命令行优先；不在默认值中提交个人信息或凭据。
 
 ## Core Constraints
 
